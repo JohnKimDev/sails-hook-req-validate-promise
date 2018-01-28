@@ -1,6 +1,6 @@
 {
-  "name": "sails-hook-req-validate",
-  "version": "1.0.2",
+  "name": "sails-hook-req-validate-promise",
+  "version": "1.0.0",
   "description": "Validations in Sailsjs requests",
   "keywords": [
     "sails-hook",
@@ -28,7 +28,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:JohnKimDev/sails-hook-req-validate.git"
+    "url": "git@github.com:JohnKimDev/sails-hook-req-validate-promise.git"
   },
   "sails": {
     "isHook": true
@@ -38,9 +38,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JohnKimDev/sails-hook-req-validate/issues"
+    "url": "https://github.com/JohnKimDev/sails-hook-req-validate-promise/issues"
   },
-  "homepage": "https://github.com/JohnKimDev/sails-hook-req-validate",
+  "homepage": "https://github.com/JohnKimDev/sails-hook-req-validate-promise",
   "scripts": {
     "test": "mocha"
   }
