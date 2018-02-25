@@ -11,61 +11,71 @@ Non-Promise version: https://www.npmjs.com/package/sails-hook-req-validate
 ### req.validate();
 
 > ##### Requirements:
-Sails v1.0.0 and lodash enabled as global (by default it comes enabled). For v0.10.X see below.
-This project is originally forked from sails-hook-validator with following modifications:
-
-> * rather then creating a new validation function, it overwrites the existing `req.validate` function
-> * changed the optional field marker `?` to be the surffix (ex: name?)
-> * updated the filter names
-> * changed the error respond from `res.error(400, data)` to `res.badRequest(data)`
-
-```javascript
-// 'numeric || string' or 'numeric|| string' are OK. Space will be ignored
-req.validate({'id' : 'numeric||string'});     
-```
+Sails v1.0.0 and lodash enabled as global (by default it comes enabled). 
 
 ---
+### [NEW in 1.1.0] Enumeration check
 
-### [NEW] OR Operation
-OR `||` operarion is a new addition to 0.2.x version. It can be applied to either *required* or *optional* parameter.
 ```javascript
-  req.validate(
-      {'id': 'string || numeric'},   // 'numeric || string' or 'numeric|| string' are OK. Space will be ignored
-      {'usernameOrEmail': 'string || numeric || email'}
-    ).then(params => {  
-      console.log(params);   // {id: '1234', usernameOrEmail: 'user001'} 
-    }).catch(err => {
-      // if the validation fails, "req.badRequest" will be called and returns Promise.reject
-      console.log(err);
+  req.validate('id', {enum: ['apple', 'organe', 'bannana']})
+    .then(params => {  
+      console.log(params);
     });
 ```
 
-<br>
+```javascript
+  req.validate([
+    {'id', {enum: ['apple', 'organe', 'bannana']}},
+    {'username?', 'string' }
+    ).then(params => {  
+      console.log(params);
+    });
+```
+
+```javascript
+  req.validate([
+    {'id', ['string', {enum: ['apple', 'organe', 'bannana']}]},
+    {'username?', 'string' }
+    ).then(params => {  
+      console.log(params);
+    });
+```
+---
+
 
 ### Simple Single & Multple Parameter(s)
 Validates `req.params` for expecting parameter keys and returns `req.badRequest` (400 status code) if any parameter key is missing.
+
 
 ```javascript
   req.validate('id')
     .then(params => {  
       console.log(params);   // {id: '1234'} 
-    })
-    .catch(err => {
-      // if the validation fails, "req.badRequest" will be called and returns Promise.reject
-      console.log(err);
     });
+    // if the validation fails, "req.badRequest" will be called and will NOT returns Promise.reject
 ```
 <br>
 
+Disable `req.badRequest` on error and enable `Promise.reject`
 ```javascript
-  req.validate(['id', 'firstname', 'lastname']);
+  req.validate('id', false)  // <--- if you set the second value as FALSE, req.badRequest will NOT be call when error but it will return Promise.reject
     .then(params => {  
-      console.log(params);   // {id: '1234', firstname: "John", lastname: "Doe"}
+      console.log(params);   // {id: '1234'} 
     })
     .catch(err => {
-      // if the validation fails, "req.badRequest" will be called and returns Promise.reject
       console.log(err);
     });
+```
+NOTE: To disable the default error response, set `false` as the second passing variable.
+
+<br>
+
+```javascript
+  req.validate(['id', 'firstname', 'lastname'])
+    .then(params => {  
+      console.log(params);   // {id: '1234', firstname: "John", lastname: "Doe"}
+    });
+    // if the validation fails, "req.badRequest" will be called and will NOT returns Promise.reject
 ```
 
 <br>
@@ -74,17 +84,33 @@ Validates `req.params` for expecting parameter keys and returns `req.badRequest`
 Validates `req.params` for expecting parameter keys and returns `req.badRequest` (400 status code) if any parameter key is missing except optional parameters.
 
 ```javascript
-  req.validate(['id', 'firstname', 'lastname?']);  // lastname is an OPTIONAL field 
+  req.validate(['id', 'firstname', 'lastname?'])  // lastname is an OPTIONAL field 
+    .then(params => {  
+      console.log(params);   // {id: '1234', firstname: "John", lastname: "Doe"}
+    });
+    // if the validation fails, "req.badRequest" will be called and will NOT returns Promise.reject
+```
+
+NOTE: For an optional parameter, just add `?` at the end of the passing parameter key.
+
+<br>
+
+Disable `req.badRequest` on error and enable `Promise.reject`
+
+```javascript
+  req.validate(
+    ['id', 'firstname', 'lastname?'],   // lastname is an OPTIONAL field 
+    false  // <--- if you set the second value as FALSE, req.badRequest will NOT be call when error but it will return Promise.reject                             
+    )  
     .then(params => {  
       console.log(params);   // {id: '1234', firstname: "John", lastname: "Doe"}
     })
     .catch(err => {
-      // if the validation fails, "req.badRequest" will be called and returns Promise.reject
       console.log(err);
     });
-```
 
-NOTE: For an optional parameter, just add `?` at the end of the passing parameter key.
+```
+NOTE: To disable the default error response, set `false` as the second passing variable.
 
 <br>
 
@@ -99,15 +125,26 @@ Validates `req.params` for expecting parameter keys and returns `req.badRequest`
 		]) 
     .then(params => {  
       console.log(params);   // {id: '1234', firstname: "John", lastname: "Doe"}
-    }) 
-    .catch(err => {
-      // if the validation fails, "req.badRequest" will be called and returns Promise.reject
-      console.log(err);
-    }); 
+    });
+    // if the validation fails, "req.badRequest" will be called and will NOT returns Promise.reject
 ```
 See [Validation Filters](#validation_filters) for more information.
 
 <br>
+
+### OR Operation
+OR `||` operarion is a new addition to 0.2.x version. It can be applied to either *required* or *optional* parameter.
+```javascript
+  req.validate(
+      {'id': 'string || numeric'},   // 'numeric || string' or 'numeric|| string' are OK. Space will be ignored
+      {'usernameOrEmail': 'string || numeric || email'}
+    ).then(params => {  
+      console.log(params);   // {id: '1234', usernameOrEmail: 'user001'} 
+    });
+    // if the validation fails, "req.badRequest" will be called and will NOT returns Promise.reject
+```
+<br>
+
 
 ### Multple Parameters with TYPE filters & CONVERTION filters
 Validates `req.params` for expecting parameter keys and returns `req.badRequest` (400 status code) if any missing parameter key.
@@ -120,11 +157,8 @@ Validates `req.params` for expecting parameter keys and returns `req.badRequest`
 		])
 		.then(params => {  
       console.log(params);   // {id: '1234', firstname: "John", lastname: "Doe"}
-    })
-    .catch(err => {
-      // if the validation fails, "req.badRequest" will be called and returns Promise.reject
-      console.log(err);
-    }); 
+    });
+    // if the validation fails, "req.badRequest" will be called and will NOT returns Promise.reject// if the validation fails, "req.badRequest" will NOT returns Promise.reject
 ```
 NOTE: All CONVERTION filters start with `to`, for example: toUppercase, toBoolean.
 
@@ -145,11 +179,8 @@ Validates `req.params` for expecting parameter keys and returns `req.badRequest`
 		])
 		.then(params => {  
       console.log(params);   // {id: '1234', firstname: "John", lastname: "Doe"}
-    })
-    .catch(err => {
-      // if the validation fails, "req.badRequest" will be called and returns Promise.reject
-      console.log(err);
-    }); 
+    });
+    // if the validation fails, "req.badRequest" will be called and will NOT returns Promise.reject
 ```
 See [Validation Filters](#validation_filters) and [Conversion Filters](#conversion_filters) for more information.
 
@@ -164,10 +195,8 @@ When the validation fails, `res.badRequest` will not be sent instead 'false' wil
     console.log(params);   // {id: '1234', firstname: "John", lastname: "Doe"}
   })
   .catch(err => {
-    // if the validation fails, "req.badRequest" will be called and returns Promise.reject
     console.log(err);
-    return res.badRequest(err);
-  }); 
+  });
 
 ```
 NOTE: To disable the default error response, set `false` as the second passing variable.
