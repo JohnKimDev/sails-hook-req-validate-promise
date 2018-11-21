@@ -11,22 +11,22 @@ Non-Promise version: https://www.npmjs.com/package/sails-hook-req-validate
 ### req.validate();
 
 > ##### Requirements:
-Sails v1.0.0 and lodash enabled as global (lodash is enabled by default). 
+Sails v1.x.x and lodash enabled as global (lodash is enabled by default). 
 
 ---
 
 ### Default Value (when a parameter is not set)
 
 ```javascript
-  const params = await req.validate('id', {default: 'abcdef'}); // if 'id' id not exists, it will be set as 'abcdef'
+  const params = await req.validate('fruit', {default: 'apple'}); // if 'fruit' doesn't exists, it will be set as 'apple'
   console.log(params);
 ```
 
 ```javascript
   const params = await req.validate([
-    {'id', {enum: ['apple', 'organe', 'bannana'], default: 'apple'}},   // also can be used with enum
+    {'fruit', {enum: ['apple', 'organe', 'bannana'], default: 'apple'}},   // also can be used with enum
     {'username?', 'string' }
-    );
+  ]);
   console.log(params);
 ```
 
@@ -35,28 +35,27 @@ Sails v1.0.0 and lodash enabled as global (lodash is enabled by default).
 ### Enumeration check
 
 ```javascript
-  const params = await req.validate('id', {enum: ['apple', 'organe', 'bannana']});
+  const params = await req.validate('fruit', {enum: ['apple', 'organe', 'bannana']});
   console.log(params);
 ```
 
 ```javascript
   const params = await req.validate([
-    {'id', {enum: ['apple', 'organe', 'bannana']}},
+    {'fruit', {enum: ['apple', 'organe', 'bannana']}},
     {'username?', 'string' }
-    );
+  ]);
   console.log(params);
 ```
 
 ```javascript
   const params = await req.validate([
-    {'id', ['string', {enum: ['apple', 'organe', 'bannana']}]},
+    {'fruit', ['string', {enum: ['apple', 'organe', 'bannana']}]},
     {'username?', 'string' }
-    );
+  ]);
   console.log(params);
 ```
 
 ---
-
 
 ### Simple Single & Multple Parameter(s)
 Validates `req.params` for expecting parameter keys and returns `req.badRequest` (400 status code) if any parameter key is missing.
