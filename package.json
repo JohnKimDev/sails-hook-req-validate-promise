@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-req-validate-promise",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Validations in Sailsjs requests",
   "keywords": [
     "sails-hook",
