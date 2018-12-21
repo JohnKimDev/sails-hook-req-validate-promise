@@ -42,7 +42,8 @@ Sails v1.x.x and lodash enabled as global (lodash is enabled by default).
 ```javascript
   const params = await req.validate([
     {'fruit', {enum: ['apple', 'organe', 'bannana']}},
-    {'username?', 'string' }
+    {'username?', 'string' },
+    {'nickname?', 'any' }   // any type
   ]);
   console.log(params);
 ```
@@ -198,6 +199,7 @@ NOTE: To disable the default error response, set `false` as the second passing v
 ### <a name="validation_filters"></a>Validation Filters
 
 ```javascript  
+  any
   email
   url
   ip
