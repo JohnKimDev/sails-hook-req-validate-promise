@@ -18,7 +18,7 @@ Sails v1.x.x and lodash enabled as global (lodash is enabled by default).
 ### Default Value (when a parameter is not set)
 
 ```javascript
-  const params = await req.validate('fruit', {default: 'apple'}); // if 'fruit' doesn't exists, it will be set as 'apple'
+  const params = await req.validate(['fruit', ['string', {default: 'apple'}]); // if 'fruit' doesn't exists, it will be set as 'apple'
   console.log(params);
 ```
 
