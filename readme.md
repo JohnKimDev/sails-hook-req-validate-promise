@@ -217,6 +217,7 @@ NOTE: To disable the default error response, set `false` as the second passing v
   date
   json
   array
+  object
   ascii
   mongoId
   alphanumeric
