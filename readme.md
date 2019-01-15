@@ -1,4 +1,12 @@
-# sails-hook-req-validate-promise
+# [DEPRECATION NOTIFICATION] sails-hook-req-validate-promise
+
+## Use [sails-hook-req-validate](https://www.npmjs.com/package/sails-hook-req-validate) for the updated version! There is a brand new version that supports both PROMISE and Non-PROMISE versions along with many new features.
+
+I will no longer support this package but I will continue to update the [sails-hook-req-validate](https://www.npmjs.com/package/sails-hook-req-validate) version. 
+
+---
+---
+
 
 Sails hook for overwrite req.validate request with Promise.
 
@@ -231,7 +239,9 @@ NOTE: To disable the default error response, set `false` as the second passing v
 ```javascript  
   toLowercase
   toUppercase
-  toEmail
+  toEmail         // Normalize email string 
   toBoolean
   toDate
+  toInt
+  toFloat
 ```
